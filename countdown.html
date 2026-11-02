@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Countdown</title>
+<meta name="description" content="A one-file countdown page that reveals a message when the timer hits zero.">
+<style>
+  :root{ --ink:#f4f1ea; --soft:#9a958a; --accent:#c8a15a; }
+  *{box-sizing:border-box}
+  html,body{height:100%;margin:0}
+  body{
+    background:#0d0c0a;color:var(--ink);
+    font-family:ui-serif,Georgia,"Times New Roman",serif;
+    display:grid;place-items:center;text-align:center;overflow:hidden;
+    padding:1.5rem;
+  }
+  main{max-width:36rem}
+  .eyebrow{
+    font-family:ui-sans-serif,system-ui,sans-serif;
+    font-size:.72rem;letter-spacing:.28em;text-transform:uppercase;
+    color:var(--soft);margin:0 0 2rem
+  }
+  #grid{display:grid;grid-template-columns:repeat(4,1fr);gap:.75rem;margin:0 0 2rem}
+  .unit{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);
+    border-radius:.85rem;padding:1.1rem .4rem}
+  .num{
+    font-family:ui-monospace,"SF Mono",Menlo,monospace;
+    font-size:clamp(1.6rem,9vw,3rem);line-height:1;
+    font-variant-numeric:tabular-nums;display:block
+  }
+  .lbl{display:block;margin-top:.5rem;font-family:ui-sans-serif,system-ui,sans-serif;
+    font-size:.62rem;letter-spacing:.16em;text-transform:uppercase;color:var(--soft)}
+  #reveal{max-height:0;overflow:hidden;transition:max-height .9s cubic-bezier(.2,.8,.3,1)}
+  #reveal.show{max-height:60rem}
+  #reveal h1{font-size:1.65rem;line-height:1.3;margin:0 0 1rem}
+  #reveal p{line-height:1.75;color:#ddd8cd;margin:0 0 1rem;white-space:pre-wrap}
+  #reveal .sig{font-style:italic;color:var(--soft)}
+  #reveal img{max-width:100%;border-radius:.75rem;margin:.5rem 0}
+  .sep{width:4rem;height:1px;background:var(--accent);opacity:.5;margin:2rem auto}
+</style>
+</head>
+<body>
+<main>
+  <p class="eyebrow" id="eyebrow">until the day</p>
+  <div id="grid">
+    <div class="unit"><span class="num" id="d">--</span><span class="lbl">days</span></div>
+    <div class="unit"><span class="num" id="h">--</span><span class="lbl">hours</span></div>
+    <div class="unit"><span class="num" id="m">--</span><span class="lbl">min</span></div>
+    <div class="unit"><span class="num" id="s">--</span><span class="lbl">sec</span></div>
+  </div>
+  <div class="sep"></div>
+  <div id="reveal">
+    <h1 id="rt"></h1>
+    <p id="rp"></p>
+    <p class="sig" id="rs"></p>
+  </div>
+</main>
+
+<script>
+/* ─────────── EDIT ONLY THIS BLOCK ─────────── */
+const CONFIG = {
+  /* ISO date-time in YOUR timezone, e.g. "2026-12-25T00:00:00-03:00" */
+  target: "2026-12-25T00:00:00-03:00",
+  eyebrow: "until the day",
+  title: "It's today.",
+  message: `Everything on this page was waiting for this exact morning.\n\nOpen the drawer. It's been there since October.`,
+  signature: "— happy birthday",
+  image: ""
+};
+/* ─────────────────────────────────────────── */
+
+const target = new Date(CONFIG.target).getTime();
+const el = { d:document.getElementById('d'), h:document.getElementById('h'), m:document.getElementById('m'), s:document.getElementById('s') };
+const reveal = document.getElementById('reveal');
+
+document.getElementById('eyebrow').textContent = CONFIG.eyebrow;
+document.getElementById('rt').textContent = CONFIG.title;
+document.getElementById('rp').textContent = CONFIG.message;
+document.getElementById('rs').textContent = CONFIG.signature;
+
+if (CONFIG.image){
+  const img = document.createElement('img');
+  img.src = CONFIG.image;
+  img.alt = '';
+  document.getElementById('rp').after(img);
+}
+
+const pad = n => String(Math.max(n, 0)).padStart(2, '0');
+
+function tick(){
+  const left = target - Date.now();
+
+  if (left <= 0){
+    el.d.textContent = el.h.textContent = el.m.textContent = el.s.textContent = '00';
+    reveal.classList.add('show');
+    document.getElementById('eyebrow').style.opacity = '0';
+    clearInterval(timer);
+    return;
+  }
+
+  const sec = Math.floor(left / 1000);
+  el.d.textContent = pad(Math.floor(sec / 86400));
+  el.h.textContent = pad(Math.floor(sec % 86400 / 3600));
+  el.m.textContent = pad(Math.floor(sec % 3600 / 60));
+  el.s.textContent = pad(sec % 60);
+}
+
+tick();
+const timer = setInterval(tick, 1000);
+</script>
+</body>
+</html>
