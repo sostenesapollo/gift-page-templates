@@ -69,6 +69,10 @@ MIT. Use commercially, remix, resell, no attribution required.
 
 ---
 
+### Background
+
+Why gift pages work at all: [179.297 presentes digitais](https://sostenesapollo.github.io/digital-gift-study/) — a study on when and how people actually create digital gifts (peak is Saturday, 15h UTC; birthdays are 38% of everything).
+
 ### Want this without writing code?
 
 These templates are open source versions of a few pages from [Gifts QR](https://giftsqr.com) — there they come with a form, a photo uploader, a QR code and a link, so you can create one in about three minutes without touching HTML.
